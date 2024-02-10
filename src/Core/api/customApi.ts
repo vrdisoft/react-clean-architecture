@@ -19,9 +19,9 @@ axiosInstance.interceptors.response.use(
   (response) => response,
   async (error) => {
     if (error?.response?.status === 401) {
-      toast("unauthorized cccess");
+      toast.error("unauthorized cccess");
     } else if (error?.response?.status === 403) {
-      toast("access to the requested resource is forbidden");
+      toast.error("access to the requested resource is forbidden");
     }
     return Promise.reject(error);
   }
