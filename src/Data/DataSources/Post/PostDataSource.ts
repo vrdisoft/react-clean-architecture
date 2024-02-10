@@ -1,7 +1,8 @@
 import { Post } from "@/Domain/Models/Post";
 
 export interface PostDataSource {
-  getPosts(): Promise<{posts:Post[]}>;
+  getPosts(page: number): Promise<{ posts: Post[]; total: number }>;
   createPost(post: Omit<Post, "id">): Promise<Post>;
-  updatePost(post: Omit<Post, "userID">): Promise<Post>;
+  updatePost(post: Omit<Post, "userId">): Promise<Post>;
+  deletePost(postId: number): Promise<Post>;
 }

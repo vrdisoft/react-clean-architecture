@@ -9,15 +9,19 @@ export class PostRepositoryImpl implements PostRepository {
     this.datasource = datasource;
   }
 
-  async getPosts(): Promise<{ posts: Post[] }> {
-    return await this.datasource.getPosts();
+  async getPosts(page: number): Promise<{ posts: Post[]; total: number }> {
+    return await this.datasource.getPosts(page);
   }
 
   async createPost(post: Omit<Post, "id">): Promise<Post> {
     return await this.datasource.createPost(post);
   }
 
-  async updatePost(post: Omit<Post, "userID">): Promise<Post> {
+  async updatePost(post: Omit<Post, "userId">): Promise<Post> {
     return await this.datasource.updatePost(post);
+  }
+
+  async deletePost(postId: number): Promise<Post> {
+    return await this.datasource.deletePost(postId);
   }
 }

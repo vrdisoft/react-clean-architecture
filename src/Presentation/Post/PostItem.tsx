@@ -7,9 +7,13 @@ import Collapse from "@mui/material/Collapse";
 import Modal from "@mui/material/Modal";
 import Button from "@mui/material/Button";
 
-import Icon from "@/Core/components/icon/Icon";
+import Icon from "@/Presentation/UI/Components/Icon/Icon";
 import { Post } from "@/Domain/Models/Post";
 import { Stack } from "@mui/material";
+import { AddEditPost } from "./AddEditPost";
+import { useDeletePost } from "@/Domain/UseCases/useDeletePost";
+import { PostRepositoryImpl } from "@/Data/Repositories/PostRepositoryImpl";
+import { PostDataSourceImpl } from "@/Data/DataSources/Post/PostDataSourceImpl";
 
 type PostItemProps = {
   item: Post;
@@ -24,8 +28,19 @@ export function PostItem({ item }: PostItemProps) {
   const handleOpenModal = () => setOpenModal(true);
   const handleCloseModal = () => setOpenModal(false);
 
-  const onDeletPost = () => {
+  const deletePost = useDeletePost(
+    new PostRepositoryImpl(new PostDataSourceImpl())
+  );
 
+  const onDeletPost = () => {
+    deletePost.mutate(
+      { ...item },
+      {
+        onSuccess: () => {
+          handleCloseModal()
+        },
+      }
+    );
   }
 
   return (
@@ -34,67 +49,69 @@ export function PostItem({ item }: PostItemProps) {
         borderRadius: "16px",
         backgroundColor: "action.selected",
         boxShadow: "none",
-        padding: "16px",
+        p: 2,
       }}
     >
-      <Grid container spacing={1}>
-        <Grid item >
-          <Stack
-            sx={{
-              gap: 1,
-            }}
-          >
-            <Box
+      <Collapse in={!showEditPost}>
+        {!showEditPost && <Grid container spacing={1}>
+          <Grid item >
+            <Stack
               sx={{
-                display: "flex",
-                justifyContent: "start",
-                gap: 2,
+                gap: 1,
               }}
             >
-              <Typography variant="body1">{item.title}</Typography>
-            </Box>
-            <Box
-              sx={{
-                display: "flex",
-                justifyContent: "start",
-              }}
-            >
-              <Typography variant="caption">{item.body}</Typography>
-            </Box>
-            <Box
-              sx={{
-                display: "flex",
-                justifyContent: "start",
-              }}
-            >
-              <Button
-                variant="text"
-                color="warning"
-                startIcon={<Icon variation="Edit" />}
-                size="small"
-                onClick={onClickEditPost}
-                disabled={showEditPost}
+              <Box
+                sx={{
+                  display: "flex",
+                  justifyContent: "start",
+                  gap: 2,
+                }}
               >
-                edit
-              </Button>
-              <Button
-                variant="text"
-                color="error"
-                startIcon={<Icon variation="Delete" />}
-                size="small"
-                onClick={handleOpenModal}
+                <Typography variant="body1">{item.title}</Typography>
+              </Box>
+              <Box
+                sx={{
+                  display: "flex",
+                  justifyContent: "start",
+                }}
               >
-                {"delete"}
-              </Button>
-            </Box>
-          </Stack>
-        </Grid>
-      </Grid>
+                <Typography variant="caption">{item.body}</Typography>
+              </Box>
+              <Box
+                sx={{
+                  display: "flex",
+                  justifyContent: "start",
+                }}
+              >
+                <Button
+                  variant="text"
+                  color="warning"
+                  startIcon={<Icon variation="Edit" />}
+                  size="small"
+                  onClick={onClickEditPost}
+                  disabled={showEditPost}
+                >
+                  edit
+                </Button>
+                <Button
+                  variant="text"
+                  color="error"
+                  startIcon={<Icon variation="Delete" />}
+                  size="small"
+                  onClick={handleOpenModal}
+                >
+                  {"delete"}
+                </Button>
+              </Box>
+            </Stack>
+          </Grid>
+        </Grid>}
+      </Collapse>
       <Collapse in={showEditPost}>
-        {/* <AddPost
+        {showEditPost && <AddEditPost
           onShowAddPost={(show: boolean) => { setShowEditPost(show) }}
-          PostItem={item}
-        /> */}
+          postItem={item}
+        />}
       </Collapse>
       <Modal
         open={openModal}
@@ -102,42 +119,55 @@ export function PostItem({ item }: PostItemProps) {
         aria-labelledby="modal-modal-title"
         aria-describedby="modal-modal-description"
       >
-        <Box>
-          <Typography id="modal-modal-title" variant="h6" component="h2">
-            {"areYouSure"}
-          </Typography>
-          <Box
-            sx={{
-              display: "flex",
-              alignItems: "center",
-              gap: "8px",
-              marginTop: "20px",
-              justifyContent: "end",
-            }}
-          >
-            <Button
-              variant="outlined"
-              color="warning"
+        <Stack sx={{
+          display: "flex",
+          alignItems: "center",
+          height: '100dvh',
+          justifyContent: "center",
+        }}>
+          <Box sx={{
+            bgcolor: 'GrayText',
+            height: 120,
+            width: 500,
+            p: 2,
+            borderRadius: 4
+          }}>
+            <Typography id="modal-modal-title" variant="h6" component="h2">
+              {"are you sure?"}
+            </Typography>
+            <Box
               sx={{
-                fontWeight: "500",
-                fontSize: "0.696429rem",
-                lineHeight: "1.75",
+                display: "flex",
+                alignItems: "center",
+                gap: "8px",
+                marginTop: "20px",
+                justifyContent: "end",
               }}
-              size="small"
-              onClick={handleCloseModal}
             >
-              {"cancel"}
-            </Button>
-            <Button
-              variant="contained"
-              color="warning"
-              size="small"
-              onClick={onDeletPost}
-            >
-              {"delete"}
-            </Button>
+              <Button
+                variant="outlined"
+                color="warning"
+                sx={{
+                  fontWeight: "500",
+                  fontSize: "0.696429rem",
+                  lineHeight: "1.75",
+                }}
+                size="small"
+                onClick={handleCloseModal}
+              >
+                {"cancel"}
+              </Button>
+              <Button
+                variant="contained"
+                color="warning"
+                size="small"
+                onClick={onDeletPost}
+              >
+                {"delete"}
+              </Button>
+            </Box>
           </Box>
-        </Box>
+        </Stack>
       </Modal>
     </Paper>
   );

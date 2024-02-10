@@ -6,7 +6,6 @@ export function Layout({ children }: { children: ReactNode }) {
   return (
     <Container
       sx={{
-        marginTop: "40px",
         display: "flex",
         alignItems: "center",
         justifyContent: "center",
