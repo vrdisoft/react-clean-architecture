@@ -6,8 +6,8 @@ import Grid from "@mui/material/Grid";
 import Collapse from "@mui/material/Collapse";
 import Modal from "@mui/material/Modal";
 import Button from "@mui/material/Button";
+import { AiOutlineEdit,AiFillDelete } from 'react-icons/ai'
 
-import Icon from "@/Presentation/UI/Components/Icon/Icon";
 import { Post } from "@/Domain/Models/Post";
 import { Stack } from "@mui/material";
 import { AddEditPost } from "./AddEditPost";
@@ -86,7 +86,7 @@ export function PostItem({ item }: PostItemProps) {
                 <Button
                   variant="text"
                   color="warning"
-                  startIcon={<Icon variation="Edit" />}
+                  startIcon={<AiOutlineEdit size={16} />}
                   size="small"
                   onClick={onClickEditPost}
                   disabled={showEditPost}
@@ -96,7 +96,7 @@ export function PostItem({ item }: PostItemProps) {
                 <Button
                   variant="text"
                   color="error"
-                  startIcon={<Icon variation="Delete" />}
+                  startIcon={<AiFillDelete size={16}/>}
                   size="small"
                   onClick={handleOpenModal}
                 >

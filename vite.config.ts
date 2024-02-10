@@ -12,9 +12,7 @@ export default defineConfig({
     rollupOptions: {
       output: {
         manualChunks(id) {
-          if (id.includes("node_modules/@material-ui/icons")) {
-            return "mui";
-          } else if (id.includes("node_modules")) {
+          if (id.includes("node_modules")) {
             return "vendor";
           }
         },
