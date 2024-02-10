@@ -1,8 +1,9 @@
 import { Paper, Button, Box, Collapse, Pagination } from "@mui/material";
+import { AiOutlinePlus, } from 'react-icons/ai'
+
 import { useFetchPosts } from "@/Domain/UseCases/useFetchPosts";
 import { PostRepositoryImpl } from "@/Data/Repositories/PostRepositoryImpl";
 import { PostDataSourceImpl } from "@/Data/DataSources/Post/PostDataSourceImpl";
-import Icon from "@/Presentation/UI/Components/Icon/Icon";
 import { Loading } from "@/Presentation/UI/Components/Loading";
 import { useState } from "react";
 import { PostItem } from "./PostItem";
@@ -46,7 +47,7 @@ const PostList = () => {
               variant="text"
               color="warning"
               size="small"
-              startIcon={<Icon variation="Add" />}
+              startIcon={<AiOutlinePlus size={16}/>}
               onClick={() => { setShowAddPost(true) }}
               disabled={showAddPost}
             >
